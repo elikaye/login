@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
         if (!isMatch) return res.status(400).json({ msg: 'Contraseña incorrecta' });
 
         // Generar un token JWT
-        const token = jwt.sign({ id: user._id }, 'your-secret-key', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Devolver el token y la información del usuario (sin la contraseña)
         res.json({
