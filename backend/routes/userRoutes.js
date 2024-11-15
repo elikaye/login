@@ -32,8 +32,8 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Verificar si el usuario existe
-        const user = await User.findOne({ username });
+        // Verificar si el usuario existe por su email
+        const user = await User.findOne({ email });  // Cambié de 'username' a 'email'
         if (!user) return res.status(400).json({ msg: 'Usuario no encontrado' });
 
         // Comparar la contraseña
@@ -53,5 +53,7 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ msg: 'Error en el servidor' });
     }
 });
+
+
 
 module.exports = router;
