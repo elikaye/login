@@ -29,7 +29,7 @@ router.post('/register', async (req, res) => {
 
 // Ruta de login
 router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     try {
         // Verificar si el usuario existe
