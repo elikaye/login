@@ -27,13 +27,14 @@ router.post('/register', async (req, res) => {
     }
 });
 
+
 // Ruta de login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
         // Verificar si el usuario existe por su email
-        const user = await User.findOne({ email });  // Cambié de 'username' a 'email'
+        const user = await User.findOne({ email }); // Cambié de username a email
         if (!user) return res.status(400).json({ msg: 'Usuario no encontrado' });
 
         // Comparar la contraseña
@@ -47,13 +48,12 @@ router.post('/login', async (req, res) => {
         res.json({
             msg: 'Login exitoso',
             token,
-            user: { id: user._id, username: user.username }
+            user: { id: user._id, email: user.email }
         });
     } catch (err) {
         res.status(500).json({ msg: 'Error en el servidor' });
     }
 });
-
 
 
 module.exports = router;
