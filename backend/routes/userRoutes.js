@@ -6,11 +6,11 @@ const User = require('../models/user'); // Asegúrate de que el modelo de usuari
 
 // Ruta de registro
 router.post('/register', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
 
     try {
         // Verifica si el usuario ya existe
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ email });
         if (existingUser) return res.status(400).json({ msg: 'El usuario ya existe' });
 
         // Cifra la contraseña antes de guardarla
@@ -18,23 +18,23 @@ router.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt); // Cifra la contraseña
 
         // Crea un nuevo usuario con la contraseña cifrada
-        const user = new User({ username, password: hashedPassword });
+        const user = new User({ username, email, password: hashedPassword });
         await user.save();
 
         res.json({ msg: 'Usuario registrado con éxito', user: { id: user._id, username: user.username } });
     } catch (err) {
+        console.error('Error en el registro:', err);
         res.status(500).json({ msg: 'Error en el servidor' });
     }
 });
 
-
 // Ruta de login
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     try {
-        // Verificar si el usuario existe por su email
-        const user = await User.findOne({ email }); // Cambié de username a email
+        // Verificar si el usuario existe por su nombre de usuario
+        const user = await User.findOne({ username });
         if (!user) return res.status(400).json({ msg: 'Usuario no encontrado' });
 
         // Comparar la contraseña
@@ -48,12 +48,12 @@ router.post('/login', async (req, res) => {
         res.json({
             msg: 'Login exitoso',
             token,
-            user: { id: user._id, email: user.email }
+            user: { id: user._id, username: user.username }
         });
     } catch (err) {
+        console.error('Error en login:', err);
         res.status(500).json({ msg: 'Error en el servidor' });
     }
 });
-
 
 module.exports = router;
